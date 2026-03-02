@@ -4,6 +4,20 @@ A self-hosted, open-source Consent Management Platform with an injectable cookie
 
 **Zero dependencies. Vanilla JS. Works on any website.**
 
+## Screenshots
+
+| General Settings | Appearance & Themes |
+|:---:|:---:|
+| ![Admin dashboard — general settings](screenshots/cmp_1.png) | ![Theme presets and custom colours](screenshots/cmp_2.png) |
+
+| Consent Categories | Embed Code |
+|:---:|:---:|
+| ![Category management with GCM parameter mapping](screenshots/cmp_3.png) | ![Configurable embed domain and code snippets](screenshots/cmp_4.png) |
+
+| Floating Card Layout |
+|:---:|
+| ![Floating card banner layout with vertical buttons](screenshots/cmp_5.png) |
+
 ## Features
 
 - **Injectable cookie banner** — embed on any site with a single `<script>` tag
