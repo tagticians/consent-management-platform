@@ -14,9 +14,9 @@ A self-hosted, open-source Consent Management Platform with an injectable cookie
 |:---:|:---:|
 | ![Category management with GCM parameter mapping](screenshots/cmp_3.png) | ![Configurable embed domain and code snippets](screenshots/cmp_4.png) |
 
-| Floating Card Layout |
-|:---:|
-| ![Floating card banner layout with vertical buttons](screenshots/cmp_5.png) |
+| Floating Card Layout | Diagnostics Panel |
+|:---:|:---:|
+| ![Floating card banner layout with vertical buttons](screenshots/cmp_5.png) | ![Real-time consent state, GCM parameters, and dataLayer log](screenshots/cmp_6.png) |
 
 ## Features
 
