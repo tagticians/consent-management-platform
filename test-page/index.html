@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMP Test Page</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1f2937;
+      line-height: 1.6;
+      background: #f9fafb;
+    }
+
+    /* Header */
+    .site-header {
+      background: #1e293b;
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header h1 { font-size: 20px; font-weight: 700; }
+    .site-header nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 14px;
+      transition: color 0.15s;
+    }
+    .site-header nav a:hover { color: #fff; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+      color: #fff;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .hero h2 { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+    .hero p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto 24px; }
+    .hero-btn {
+      display: inline-block;
+      background: #fff;
+      color: #2563eb;
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      transition: transform 0.1s;
+    }
+    .hero-btn:hover { transform: scale(1.03); }
+
+    /* Content sections */
+    .content { max-width: 1000px; margin: 0 auto; padding: 40px 24px; }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: #6b7280; }
+
+    /* Diagnostics panel */
+    .diagnostics {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 32px;
+    }
+    .diagnostics h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .diagnostics .subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    .diag-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 700px) {
+      .diag-grid { grid-template-columns: 1fr; }
+    }
+
+    .diag-section {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .diag-section h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    .diag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #1e293b;
+      font-size: 13px;
+    }
+    .diag-row:last-child { border-bottom: none; }
+    .diag-label { color: #94a3b8; }
+    .diag-value { font-weight: 600; font-family: 'SF Mono', Monaco, Consolas, monospace; }
+
+    .status-granted { color: #34d399; }
+    .status-denied { color: #f87171; }
+    .status-unknown { color: #fbbf24; }
+
+    /* DataLayer log */
+    .diag-section.full-width {
+      grid-column: 1 / -1;
+    }
+    #datalayer-log {
+      max-height: 260px;
+      overflow-y: auto;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .log-entry {
+      padding: 6px 8px;
+      border-bottom: 1px solid #1e293b;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .log-entry:nth-child(even) { background: rgba(255,255,255,0.02); }
+    .log-entry .log-time { color: #64748b; margin-right: 8px; }
+    .log-entry .log-event { color: #38bdf8; }
+
+    /* Diag buttons */
+    .diag-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .diag-btn {
+      background: #334155;
+      color: #e2e8f0;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .diag-btn:hover { background: #475569; }
+    .diag-btn.danger { background: #991b1b; }
+    .diag-btn.danger:hover { background: #b91c1c; }
+
+    /* Footer */
+    .site-footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 48px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dummy website header -->
+  <header class="site-header">
+    <h1>Acme Corp</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Products</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero section -->
+  <section class="hero">
+    <h2>Welcome to Acme Corp</h2>
+    <p>This is a dummy test page for the Consent Management Platform. Interact with the cookie banner below and watch the diagnostics update in real time.</p>
+    <a href="#diagnostics" class="hero-btn">View Diagnostics</a>
+  </section>
+
+  <!-- Dummy content -->
+  <div class="content">
+    <div class="features">
+      <div class="feature-card">
+        <h3>Google Consent Mode v2</h3>
+        <p>Full compliance with Google's consent signals including ad_storage, ad_user_data, ad_personalization, and analytics_storage.</p>
+      </div>
+      <div class="feature-card">
+        <h3>GTM Integration</h3>
+        <p>Pushes consent state to the dataLayer so Google Tag Manager can fire or block tags based on user preferences.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Fully Configurable</h3>
+        <p>Customise the look, feel, text, and categories through a simple JSON configuration file.</p>
+      </div>
+    </div>
+
+    <!-- Diagnostics -->
+    <div class="diagnostics" id="diagnostics">
+      <h2>CMP Diagnostics</h2>
+      <p class="subtitle">Real-time view of consent state, cookies, and dataLayer activity</p>
+
+      <div class="diag-grid">
+        <!-- Consent state -->
+        <div class="diag-section">
+          <h3>Consent Categories</h3>
+          <div id="diag-categories">
+            <div class="diag-row">
+              <span class="diag-label">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GCM parameters -->
+        <div class="diag-section">
+          <h3>Google Consent Mode Parameters</h3>
+          <div id="diag-gcm">
+            <div class="diag-row">
+              <span class="diag-label">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cookie info -->
+        <div class="diag-section">
+          <h3>Cookie Data</h3>
+          <div id="diag-cookie">
+            <div class="diag-row">
+              <span class="diag-label">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meta info -->
+        <div class="diag-section">
+          <h3>Meta</h3>
+          <div id="diag-meta">
+            <div class="diag-row">
+              <span class="diag-label">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DataLayer log -->
+        <div class="diag-section full-width">
+          <h3>DataLayer Event Log</h3>
+          <div id="datalayer-log">
+            <div class="log-entry"><span class="log-time">--:--:--</span> Waiting for events...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="diag-actions">
+        <button class="diag-btn" onclick="refreshDiagnostics()">Refresh</button>
+        <button class="diag-btn" onclick="window.CMP && window.CMP.showPreferences()">Open Preferences</button>
+        <button class="diag-btn danger" onclick="resetConsent()">Reset Consent</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>This is a test page for the Consent Management Platform. No real cookies or tracking are used beyond the CMP itself.</p>
+  </footer>
+
+  <!-- DataLayer init (must be before CMP and GTM) -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
+  <!-- CMP Banner (loads config from JSON) -->
+  <script src="/banner/cmp.js" data-cmp-config="/cmp-config.json"></script>
+
+  <!-- Diagnostics script -->
+  <script>
+    (function () {
+      var logEntries = [];
+      var originalPush = Array.prototype.push;
+
+      // Intercept dataLayer pushes
+      var realPush = window.dataLayer.push.bind(window.dataLayer);
+      window.dataLayer.push = function () {
+        var result = realPush.apply(window.dataLayer, arguments);
+        for (var i = 0; i < arguments.length; i++) {
+          logDataLayerEntry(arguments[i]);
+        }
+        refreshDiagnostics();
+        return result;
+      };
+
+      function logDataLayerEntry(entry) {
+        var now = new Date();
+        var time = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+
+        var summary = '';
+        if (entry[0] === 'consent') {
+          summary = 'consent.' + entry[1] + ': ' + JSON.stringify(entry[2]);
+        } else if (entry.event) {
+          summary = 'event: ' + entry.event + ' ' + JSON.stringify(entry, null, 0);
+        } else if (typeof entry === 'function') {
+          summary = '[function]';
+        } else {
+          summary = JSON.stringify(entry, null, 0);
+        }
+
+        logEntries.push({ time: time, text: summary });
+
+        // Keep last 50 entries
+        if (logEntries.length > 50) logEntries.shift();
+      }
+
+      function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+      // Also catch any entries already in dataLayer
+      for (var i = 0; i < window.dataLayer.length; i++) {
+        logDataLayerEntry(window.dataLayer[i]);
+      }
+
+      // Expose refresh globally
+      window.refreshDiagnostics = function () {
+        updateCategories();
+        updateGcm();
+        updateCookie();
+        updateMeta();
+        updateLog();
+      };
+
+      window.resetConsent = function () {
+        if (window.CMP) {
+          window.CMP.resetConsent();
+          setTimeout(refreshDiagnostics, 100);
+        }
+      };
+
+      function updateCategories() {
+        var el = document.getElementById('diag-categories');
+        var consent = window.CMP ? window.CMP.getConsent() : null;
+
+        if (!consent) {
+          el.innerHTML = '<div class="diag-row"><span class="diag-label">No consent recorded</span><span class="diag-value status-unknown">pending</span></div>';
+          return;
+        }
+
+        var html = '';
+        var keys = Object.keys(consent);
+        for (var i = 0; i < keys.length; i++) {
+          var granted = consent[keys[i]];
+          html += '<div class="diag-row">' +
+            '<span class="diag-label">' + keys[i] + '</span>' +
+            '<span class="diag-value ' + (granted ? 'status-granted' : 'status-denied') + '">' +
+            (granted ? 'granted' : 'denied') + '</span></div>';
+        }
+        el.innerHTML = html;
+      }
+
+      function updateGcm() {
+        var el = document.getElementById('diag-gcm');
+        var gcm = window.CMP ? window.CMP.getGcmState() : null;
+
+        if (!gcm) {
+          var params = ['ad_storage', 'ad_user_data', 'ad_personalization', 'analytics_storage', 'functionality_storage', 'personalization_storage', 'security_storage'];
+          var html = '';
+          for (var i = 0; i < params.length; i++) {
+            var val = (params[i] === 'security_storage') ? 'granted' : 'denied';
+            var cls = (params[i] === 'security_storage') ? 'status-granted' : 'status-denied';
+            html += '<div class="diag-row"><span class="diag-label">' + params[i] + '</span>' +
+              '<span class="diag-value ' + cls + '">' + val + ' (default)</span></div>';
+          }
+          el.innerHTML = html;
+          return;
+        }
+
+        var html = '';
+        var keys = Object.keys(gcm);
+        for (var i = 0; i < keys.length; i++) {
+          html += '<div class="diag-row">' +
+            '<span class="diag-label">' + keys[i] + '</span>' +
+            '<span class="diag-value ' + (gcm[keys[i]] === 'granted' ? 'status-granted' : 'status-denied') + '">' +
+            gcm[keys[i]] + '</span></div>';
+        }
+        el.innerHTML = html;
+      }
+
+      function updateCookie() {
+        var el = document.getElementById('diag-cookie');
+        var raw = document.cookie.match(/(^| )cmp_consent=([^;]+)/);
+
+        if (!raw) {
+          el.innerHTML = '<div class="diag-row"><span class="diag-label">cmp_consent</span><span class="diag-value status-unknown">not set</span></div>';
+          return;
+        }
+
+        var decoded = decodeURIComponent(raw[2]);
+        var parsed;
+        try { parsed = JSON.parse(decoded); } catch (e) { parsed = null; }
+
+        var html = '<div class="diag-row"><span class="diag-label">Raw value</span><span class="diag-value" style="font-size:11px;max-width:350px;overflow:hidden;text-overflow:ellipsis;">' +
+          escapeHtml(decoded).substring(0, 120) + '...</span></div>';
+
+        if (parsed) {
+          if (parsed.timestamp) {
+            html += '<div class="diag-row"><span class="diag-label">Timestamp</span><span class="diag-value">' + parsed.timestamp + '</span></div>';
+          }
+          if (parsed.version) {
+            html += '<div class="diag-row"><span class="diag-label">Version</span><span class="diag-value">' + parsed.version + '</span></div>';
+          }
+        }
+
+        el.innerHTML = html;
+      }
+
+      function updateMeta() {
+        var el = document.getElementById('diag-meta');
+        var html = '';
+        html += '<div class="diag-row"><span class="diag-label">CMP loaded</span><span class="diag-value ' +
+          (window.CMP ? 'status-granted' : 'status-denied') + '">' + (window.CMP ? 'yes' : 'no') + '</span></div>';
+        html += '<div class="diag-row"><span class="diag-label">dataLayer entries</span><span class="diag-value">' +
+          window.dataLayer.length + '</span></div>';
+        html += '<div class="diag-row"><span class="diag-label">Has consent</span><span class="diag-value ' +
+          (window.CMP && window.CMP.getConsent() ? 'status-granted' : 'status-unknown') + '">' +
+          (window.CMP && window.CMP.getConsent() ? 'yes' : 'no') + '</span></div>';
+        el.innerHTML = html;
+      }
+
+      function updateLog() {
+        var el = document.getElementById('datalayer-log');
+        if (logEntries.length === 0) {
+          el.innerHTML = '<div class="log-entry"><span class="log-time">--:--:--</span> Waiting for events...</div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = logEntries.length - 1; i >= 0; i--) {
+          html += '<div class="log-entry"><span class="log-time">' + logEntries[i].time + '</span> ' +
+            escapeHtml(logEntries[i].text) + '</div>';
+        }
+        el.innerHTML = html;
+      }
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      // Listen for CMP consent changes
+      function waitForCMP() {
+        if (window.CMP) {
+          window.CMP.onConsentChange(function () {
+            refreshDiagnostics();
+          });
+          refreshDiagnostics();
+        } else {
+          setTimeout(waitForCMP, 50);
+        }
+      }
+      waitForCMP();
+
+      // Initial render
+      setTimeout(refreshDiagnostics, 200);
+    })();
+  </script>
+
+</body>
+</html>

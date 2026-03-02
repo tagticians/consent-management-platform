@@ -1,0 +1,11 @@
+{
+  "name": "consent-management-platform",
+  "version": "0.1.0",
+  "description": "Open-source consent management platform with injectable cookie banner and Google Consent Mode v2 support",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

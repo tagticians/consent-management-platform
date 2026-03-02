@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMP Admin</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#2563eb"/><path d="M8 14.5C8 11.46 10.46 9 13.5 9h1c3.04 0 5.5 2.46 5.5 5.5S17.54 20 14.5 20h-1C10.46 20 8 17.54 8 14.5z" stroke="#fff" stroke-width="2"/><circle cx="12.5" cy="14.5" r="1" fill="#fff"/><circle cx="15.5" cy="14.5" r="1" fill="#fff"/></svg>
+      <span>CMP Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-section="general">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L1.5 5.25v7.5L9 16.5l7.5-3.75v-7.5L9 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        General
+      </a>
+      <a href="#" class="nav-item" data-section="appearance">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M9 2v14M2 9h14" stroke="currentColor" stroke-width="1.5"/></svg>
+        Appearance
+      </a>
+      <a href="#" class="nav-item" data-section="categories">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10.5" y="2" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10.5" y="10.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+        Categories
+      </a>
+      <a href="#" class="nav-item" data-section="embed">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 5L2 9l4 4M12 5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Embed Code
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button id="btn-export" class="sidebar-action">Export Config</button>
+      <button id="btn-import" class="sidebar-action">Import Config</button>
+      <input type="file" id="import-file-input" accept=".json" style="display:none">
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <!-- Top bar -->
+    <header class="topbar">
+      <div>
+        <h1 class="topbar-title">Configuration</h1>
+        <p class="topbar-subtitle">Customise your cookie consent banner</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="btn-preview" class="btn btn-secondary">Preview Banner</button>
+        <button id="btn-save" class="btn btn-primary">Save Changes</button>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+      <!-- Editor panels -->
+      <div class="editor">
+
+        <!-- General -->
+        <section class="panel" id="section-general">
+          <h2 class="panel-title">General Settings</h2>
+
+          <!-- Logo upload -->
+          <div class="field">
+            <label class="field-label">Logo</label>
+            <p class="field-hint">Upload a logo to display on the banner and preferences panel. Recommended: 60x40px, PNG or SVG.</p>
+            <div class="logo-upload" id="logo-upload-zone">
+              <div class="logo-upload-preview" id="logo-preview" style="display:none;">
+                <img id="logo-preview-img" alt="Logo preview">
+                <button id="logo-remove" class="logo-remove" aria-label="Remove logo">&times;</button>
+              </div>
+              <div class="logo-upload-placeholder" id="logo-placeholder">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="#9ca3af" stroke-width="1.5"/><circle cx="12" cy="15" r="2" stroke="#9ca3af" stroke-width="1.5"/><path d="M4 20l6-4 4 3 5-4 9 5" stroke="#9ca3af" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span>Drop image here or <strong>click to upload</strong></span>
+                <span class="logo-upload-hint">PNG, JPG, SVG &middot; 60 &times; 40px recommended</span>
+              </div>
+              <input type="file" id="logo-file-input" accept="image/png,image/jpeg,image/svg+xml" style="display:none">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="cfg-title">Banner Title</label>
+            <input type="text" id="cfg-title" class="input" placeholder="We value your privacy">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="cfg-description">Banner Description</label>
+            <textarea id="cfg-description" class="input textarea" rows="3" placeholder="We use cookies to enhance your browsing experience..."></textarea>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="cfg-prefs-title">Preferences Panel Title</label>
+            <input type="text" id="cfg-prefs-title" class="input" placeholder="Cookie Preferences">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="cfg-prefs-desc">Preferences Panel Description</label>
+            <textarea id="cfg-prefs-desc" class="input textarea" rows="2" placeholder="Choose which types of cookies you would like to allow..."></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-accept-text">Accept Button Text</label>
+              <input type="text" id="cfg-accept-text" class="input" placeholder="Accept All">
+            </div>
+            <div class="field">
+              <label class="field-label" for="cfg-reject-text">Reject Button Text</label>
+              <input type="text" id="cfg-reject-text" class="input" placeholder="Reject All">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-settings-text">Settings Button Text</label>
+              <input type="text" id="cfg-settings-text" class="input" placeholder="Manage Preferences">
+            </div>
+            <div class="field">
+              <label class="field-label" for="cfg-save-text">Save Button Text</label>
+              <input type="text" id="cfg-save-text" class="input" placeholder="Save Preferences">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-position">Banner Position</label>
+              <select id="cfg-position" class="input select">
+                <option value="bottom">Bottom</option>
+                <option value="top">Top</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label" for="cfg-cookie-duration">Cookie Duration (days)</label>
+              <input type="number" id="cfg-cookie-duration" class="input" min="1" max="730" placeholder="365">
+            </div>
+          </div>
+
+          <div class="field-divider"></div>
+          <h3 class="panel-subtitle">Floating Preferences Button</h3>
+          <p class="field-hint" style="margin-bottom:16px;">This button appears after the user makes a consent choice, allowing them to re-open the preferences panel at any time.</p>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-fb-position">Position</label>
+              <select id="cfg-fb-position" class="input select">
+                <option value="bottom-left">Bottom Left</option>
+                <option value="bottom-right">Bottom Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="top-right">Top Right</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label" for="cfg-fb-icon">Icon</label>
+              <select id="cfg-fb-icon" class="input select">
+                <option value="cookie">Cookie</option>
+                <option value="shield">Shield</option>
+                <option value="fingerprint">Fingerprint</option>
+                <option value="lock">Lock</option>
+                <option value="settings">Settings</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field colour-field">
+              <label class="field-label" for="clr-fb-bg">Button Colour</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-fb-bg" class="colour-picker">
+                <input type="text" id="clr-fb-bg-hex" class="input colour-hex" maxlength="7">
+              </div>
+              <p class="field-hint">Leave as primary colour to follow the theme.</p>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-fb-text">Icon Colour</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-fb-text" class="colour-picker">
+                <input type="text" id="clr-fb-text-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="cfg-fb-size">Size (px)</label>
+            <input type="number" id="cfg-fb-size" class="input" min="32" max="64" placeholder="44" style="max-width:120px;">
+          </div>
+
+          <!-- Floating button preview -->
+          <div class="field">
+            <label class="field-label">Preview</label>
+            <div id="fb-preview" style="display:flex;align-items:center;gap:16px;padding:16px;background:#f3f4f6;border-radius:8px;">
+              <div id="fb-preview-btn" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);"></div>
+              <span style="font-size:13px;color:#6b7280;">Click to cycle through icons</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Appearance -->
+        <section class="panel" id="section-appearance" style="display:none;">
+          <h2 class="panel-title">Appearance</h2>
+
+          <!-- Theme presets -->
+          <div class="field">
+            <label class="field-label">Theme Presets</label>
+            <p class="field-hint">Select a preset to quickly apply a theme, then customise individual colours below.</p>
+            <div class="theme-grid" id="theme-grid"></div>
+          </div>
+
+          <div class="field-divider"></div>
+
+          <h3 class="panel-subtitle">Custom Colours</h3>
+          <div class="colour-grid">
+            <div class="field colour-field">
+              <label class="field-label" for="clr-primary">Primary</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-primary" class="colour-picker">
+                <input type="text" id="clr-primary-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-primary-hover">Primary Hover</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-primary-hover" class="colour-picker">
+                <input type="text" id="clr-primary-hover-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-bg">Background</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-bg" class="colour-picker">
+                <input type="text" id="clr-bg-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-text">Text</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-text" class="colour-picker">
+                <input type="text" id="clr-text-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-secondary-text">Secondary Text</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-secondary-text" class="colour-picker">
+                <input type="text" id="clr-secondary-text-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-border">Border</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-border" class="colour-picker">
+                <input type="text" id="clr-border-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+            <div class="field colour-field">
+              <label class="field-label" for="clr-toggle-off">Toggle Off</label>
+              <div class="colour-input-wrap">
+                <input type="color" id="clr-toggle-off" class="colour-picker">
+                <input type="text" id="clr-toggle-off-hex" class="input colour-hex" maxlength="7">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-divider"></div>
+
+          <h3 class="panel-subtitle">Typography &amp; Shape</h3>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-font">Font Family</label>
+              <select id="cfg-font" class="input select">
+                <option value="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">System Default</option>
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="Georgia, 'Times New Roman', serif">Georgia (Serif)</option>
+                <option value="'Courier New', monospace">Monospace</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-border-radius">Panel Border Radius</label>
+              <input type="text" id="cfg-border-radius" class="input" placeholder="12px">
+            </div>
+            <div class="field">
+              <label class="field-label" for="cfg-btn-radius">Button Border Radius</label>
+              <input type="text" id="cfg-btn-radius" class="input" placeholder="8px">
+            </div>
+          </div>
+        </section>
+
+        <!-- Categories -->
+        <section class="panel" id="section-categories" style="display:none;">
+          <h2 class="panel-title">Consent Categories</h2>
+          <p class="panel-desc">Configure the consent categories shown in the banner. Drag to reorder. Each category maps to Google Consent Mode parameters.</p>
+          <div id="categories-list"></div>
+          <button id="btn-add-category" class="btn btn-secondary" style="margin-top:16px;">+ Add Category</button>
+        </section>
+
+        <!-- Embed Code -->
+        <section class="panel" id="section-embed" style="display:none;">
+          <h2 class="panel-title">Embed Code</h2>
+          <p class="panel-desc">Add this snippet to your website's <code>&lt;head&gt;</code> tag, or paste it into a Custom HTML tag in Google Tag Manager. Make sure it loads <strong>before</strong> the GTM container snippet.</p>
+
+          <div class="field">
+            <label class="field-label">Script Tag (Self-Hosted)</label>
+            <div class="code-block">
+              <pre id="embed-script"></pre>
+              <button class="code-copy" data-target="embed-script">Copy</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">GTM Custom HTML Tag</label>
+            <div class="code-block">
+              <pre id="embed-gtm"></pre>
+              <button class="code-copy" data-target="embed-gtm">Copy</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Live preview -->
+      <div class="preview-pane">
+        <div class="preview-header">
+          <h3>Live Preview</h3>
+          <div class="preview-tabs">
+            <button class="preview-tab active" data-view="banner">Banner</button>
+            <button class="preview-tab" data-view="prefs">Preferences</button>
+          </div>
+        </div>
+        <div class="preview-frame" id="preview-frame">
+          <div class="preview-site-mock">
+            <div class="mock-header"></div>
+            <div class="mock-line w80"></div>
+            <div class="mock-line w60"></div>
+            <div class="mock-line w90"></div>
+            <div class="mock-line w40"></div>
+            <div class="mock-line w70"></div>
+          </div>
+          <div id="preview-container"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>
