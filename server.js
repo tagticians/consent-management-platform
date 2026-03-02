@@ -109,9 +109,13 @@ const MIME_TYPES = {
 // ---------------------------------------------------------------------------
 // Login page HTML
 // ---------------------------------------------------------------------------
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function loginPageHtml(error) {
   const errorHtml = error
-    ? '<div style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:10px 16px;border-radius:8px;font-size:14px;margin-bottom:20px;">' + error + '</div>'
+    ? '<div style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:10px 16px;border-radius:8px;font-size:14px;margin-bottom:20px;">' + escapeHtml(error) + '</div>'
     : '';
 
   return '<!DOCTYPE html><html lang="en"><head>' +
