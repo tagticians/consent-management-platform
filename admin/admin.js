@@ -165,7 +165,8 @@
         { id: 'personalization', name: 'Personalization', description: 'Allow personalized content.', required: false, gcmParameters: ['personalization_storage'] }
       ],
       cookieName: 'cmp_consent', cookieDuration: 365,
-      consentMode: { waitForUpdate: 500 }
+      consentMode: { waitForUpdate: 500 },
+      embedDomain: ''
     };
   }
 
@@ -220,6 +221,7 @@
     el('cfg-font').value = t.fontFamily || '';
     el('cfg-border-radius').value = t.borderRadius || '12px';
     el('cfg-btn-radius').value = t.buttonBorderRadius || '8px';
+    el('cfg-embed-domain').value = config.embedDomain || '';
 
     detectActiveTheme();
   }
@@ -266,6 +268,9 @@
     t.fontFamily = el('cfg-font').value;
     t.borderRadius = el('cfg-border-radius').value;
     t.buttonBorderRadius = el('cfg-btn-radius').value;
+
+    var embedDomain = el('cfg-embed-domain').value.replace(/\/+$/, '');
+    config.embedDomain = embedDomain || '';
 
     readCategoriesToConfig();
   }
@@ -542,11 +547,12 @@
   function updateEmbedCode() {
     var scriptEl = el('embed-script');
     var gtmEl = el('embed-gtm');
+    var domain = (el('cfg-embed-domain').value || 'https://cmp.example.com').replace(/\/+$/, '');
 
     var scriptCode =
       '<!-- Consent Management Platform -->\n' +
-      '<script src="https://cmp.martechtherapy.com/banner/cmp.js"\n' +
-      '        data-cmp-config="https://cmp.martechtherapy.com/cmp-config.json"><\/script>';
+      '<script src="' + domain + '/banner/cmp.js"\n' +
+      '        data-cmp-config="' + domain + '/cmp-config.json"><\/script>';
 
     var gtmCode =
       '<script>\n' +
@@ -554,8 +560,8 @@
       '  // Trigger: All Pages, firing priority: high\n' +
       '  (function() {\n' +
       '    var s = document.createElement("script");\n' +
-      '    s.src = "https://cmp.martechtherapy.com/banner/cmp.js";\n' +
-      '    s.setAttribute("data-cmp-config", "https://cmp.martechtherapy.com/cmp-config.json");\n' +
+      '    s.src = "' + domain + '/banner/cmp.js";\n' +
+      '    s.setAttribute("data-cmp-config", "' + domain + '/cmp-config.json");\n' +
       '    document.head.appendChild(s);\n' +
       '  })();\n' +
       '<\/script>';
@@ -807,6 +813,11 @@
       var next = iconKeys[(idx + 1) % iconKeys.length];
       el('cfg-fb-icon').value = next;
       updateFbPreview();
+    });
+
+    // Embed domain — update snippets on input
+    el('cfg-embed-domain').addEventListener('input', function () {
+      updateEmbedCode();
     });
 
     // Copy buttons

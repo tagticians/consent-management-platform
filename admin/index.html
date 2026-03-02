@@ -327,6 +327,12 @@
           <p class="panel-desc">Add this snippet to your website's <code>&lt;head&gt;</code> tag, or paste it into a Custom HTML tag in Google Tag Manager. Make sure it loads <strong>before</strong> the GTM container snippet.</p>
 
           <div class="field">
+            <label class="field-label" for="cfg-embed-domain">Your CMP Domain</label>
+            <input type="text" id="cfg-embed-domain" class="input" placeholder="https://cmp.example.com" style="max-width:400px;">
+            <p class="field-hint">The base URL where your CMP is hosted. Used to generate the embed snippets below.</p>
+          </div>
+
+          <div class="field">
             <label class="field-label">Script Tag (Self-Hosted)</label>
             <div class="code-block">
               <pre id="embed-script"></pre>
