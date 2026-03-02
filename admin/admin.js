@@ -560,6 +560,9 @@
     xhr.onload = function () {
       if (xhr.status === 200) {
         toast('Configuration saved');
+      } else if (xhr.status === 401) {
+        toast('Session expired — redirecting to login');
+        setTimeout(function () { window.location.href = '/admin/login'; }, 1000);
       } else {
         toast('Failed to save: ' + xhr.statusText);
       }
