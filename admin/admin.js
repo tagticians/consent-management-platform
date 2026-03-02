@@ -530,8 +530,8 @@
 
     var scriptCode =
       '<!-- Consent Management Platform -->\n' +
-      '<script src="https://YOUR-DOMAIN.com/banner/cmp.js"\n' +
-      '        data-cmp-config="https://YOUR-DOMAIN.com/cmp-config.json"><\/script>';
+      '<script src="https://cmp.martechtherapy.com/banner/cmp.js"\n' +
+      '        data-cmp-config="https://cmp.martechtherapy.com/cmp-config.json"><\/script>';
 
     var gtmCode =
       '<script>\n' +
@@ -539,8 +539,8 @@
       '  // Trigger: All Pages, firing priority: high\n' +
       '  (function() {\n' +
       '    var s = document.createElement("script");\n' +
-      '    s.src = "https://YOUR-DOMAIN.com/banner/cmp.js";\n' +
-      '    s.setAttribute("data-cmp-config", "https://YOUR-DOMAIN.com/cmp-config.json");\n' +
+      '    s.src = "https://cmp.martechtherapy.com/banner/cmp.js";\n' +
+      '    s.setAttribute("data-cmp-config", "https://cmp.martechtherapy.com/cmp-config.json");\n' +
       '    document.head.appendChild(s);\n' +
       '  })();\n' +
       '<\/script>';
