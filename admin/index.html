@@ -136,6 +136,31 @@
             </div>
           </div>
 
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="cfg-layout">Banner Layout</label>
+              <select id="cfg-layout" class="input select">
+                <option value="bar">Full-Width Bar</option>
+                <option value="card">Floating Card</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label" for="cfg-card-position">Card Position</label>
+              <select id="cfg-card-position" class="input select">
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+              <p class="field-hint">Only applies to Floating Card layout</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;">
+              <input type="checkbox" id="cfg-backdrop"> <span class="field-label" style="margin:0;">Enable Backdrop</span>
+            </label>
+            <p class="field-hint">Dims and blurs the page behind the banner</p>
+          </div>
+
           <div class="field-divider"></div>
           <h3 class="panel-subtitle">Floating Preferences Button</h3>
           <p class="field-hint" style="margin-bottom:16px;">This button appears after the user makes a consent choice, allowing them to re-open the preferences panel at any time.</p>

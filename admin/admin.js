@@ -147,7 +147,7 @@
   function getDefaultConfig() {
     return {
       banner: {
-        position: 'bottom', layout: 'bar', logo: null,
+        position: 'bottom', layout: 'bar', cardPosition: 'right', backdrop: false, logo: null,
         title: 'We value your privacy',
         description: 'We use cookies and similar technologies to enhance your browsing experience, analyse traffic, and personalise content.',
         primaryButtonText: 'Accept All', rejectButtonText: 'Reject All',
@@ -186,6 +186,10 @@
     el('cfg-settings-text').value = b.settingsButtonText || '';
     el('cfg-save-text').value = b.saveButtonText || '';
     el('cfg-position').value = b.position || 'bottom';
+    el('cfg-layout').value = b.layout || 'bar';
+    el('cfg-card-position').value = b.cardPosition || 'right';
+    el('cfg-backdrop').checked = !!b.backdrop;
+    updateCardPositionState();
     el('cfg-cookie-duration').value = config.cookieDuration || 365;
 
     // Logo
@@ -236,6 +240,9 @@
     b.settingsButtonText = el('cfg-settings-text').value;
     b.saveButtonText = el('cfg-save-text').value;
     b.position = el('cfg-position').value;
+    b.layout = el('cfg-layout').value;
+    b.cardPosition = el('cfg-card-position').value;
+    b.backdrop = el('cfg-backdrop').checked;
     config.cookieDuration = parseInt(el('cfg-cookie-duration').value, 10) || 365;
 
     // Floating button
@@ -438,27 +445,35 @@
   function buildPreviewBanner() {
     var b = config.banner;
     var t = b.theme;
+    var isCard = b.layout === 'card';
 
     var div = document.createElement('div');
+    var cardStyle = isCard
+      ? 'max-width:360px;border-radius:' + t.borderRadius + ';box-shadow:0 8px 32px rgba(0,0,0,0.15);'
+      : 'box-shadow:0 -4px 24px rgba(0,0,0,0.1);';
     div.style.cssText =
       'background:' + t.backgroundColor + ';color:' + t.textColor + ';' +
-      'font-family:' + t.fontFamily + ';padding:20px 24px;' +
-      'box-shadow:0 -4px 24px rgba(0,0,0,0.1);';
+      'font-family:' + t.fontFamily + ';padding:20px 24px;' + cardStyle;
 
     var logoHtml = '';
     if (b.logo) {
       logoHtml = '<img src="' + escapeHtml(b.logo) + '" style="height:32px;width:auto;margin-right:10px;">';
     }
 
+    var btnLayout = isCard
+      ? 'display:flex;flex-direction:column;gap:8px;'
+      : 'display:flex;gap:8px;flex-wrap:wrap;';
+    var btnWidth = isCard ? 'width:100%;' : '';
+
     div.innerHTML =
       '<div style="display:flex;align-items:center;margin-bottom:8px;">' + logoHtml +
         '<strong style="font-size:15px;">' + escapeHtml(b.title) + '</strong></div>' +
       '<p style="font-size:12px;line-height:1.5;color:' + t.secondaryTextColor + ';margin-bottom:14px;">' +
         escapeHtml(b.description) + '</p>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
-        '<button style="background:' + t.primaryColor + ';color:#fff;border:none;padding:8px 16px;border-radius:' + t.buttonBorderRadius + ';font-size:12px;font-weight:600;cursor:pointer;">' + escapeHtml(b.primaryButtonText) + '</button>' +
-        '<button style="background:transparent;color:' + t.textColor + ';border:1px solid ' + t.borderColor + ';padding:8px 16px;border-radius:' + t.buttonBorderRadius + ';font-size:12px;font-weight:600;cursor:pointer;">' + escapeHtml(b.rejectButtonText) + '</button>' +
-        '<button style="background:transparent;color:' + t.primaryColor + ';border:none;padding:8px 10px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;">' + escapeHtml(b.settingsButtonText) + '</button>' +
+      '<div style="' + btnLayout + '">' +
+        '<button style="' + btnWidth + 'background:' + t.primaryColor + ';color:#fff;border:none;padding:8px 16px;border-radius:' + t.buttonBorderRadius + ';font-size:12px;font-weight:600;cursor:pointer;">' + escapeHtml(b.primaryButtonText) + '</button>' +
+        '<button style="' + btnWidth + 'background:transparent;color:' + t.textColor + ';border:1px solid ' + t.borderColor + ';padding:8px 16px;border-radius:' + t.buttonBorderRadius + ';font-size:12px;font-weight:600;cursor:pointer;">' + escapeHtml(b.rejectButtonText) + '</button>' +
+        '<button style="' + btnWidth + 'background:transparent;color:' + t.primaryColor + ';border:none;padding:8px 10px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;">' + escapeHtml(b.settingsButtonText) + '</button>' +
       '</div>';
 
     return div;
@@ -650,6 +665,15 @@
   }
 
   // =========================================================================
+  // Layout helpers
+  // =========================================================================
+  function updateCardPositionState() {
+    var isCard = el('cfg-layout').value === 'card';
+    el('cfg-card-position').disabled = !isCard;
+    el('cfg-card-position').style.opacity = isCard ? '1' : '0.5';
+  }
+
+  // =========================================================================
   // Event binding
   // =========================================================================
   function bindEvents() {
@@ -761,6 +785,14 @@
       uploadZone.classList.remove('drag-over');
       if (e.dataTransfer.files.length > 0) handleLogoFile(e.dataTransfer.files[0]);
     });
+
+    // Layout controls
+    el('cfg-layout').addEventListener('change', function () {
+      updateCardPositionState();
+      updatePreview();
+    });
+    el('cfg-card-position').addEventListener('change', function () { updatePreview(); });
+    el('cfg-backdrop').addEventListener('change', function () { updatePreview(); });
 
     // Floating button controls
     ['cfg-fb-position', 'cfg-fb-icon', 'cfg-fb-size'].forEach(function (id) {

@@ -18,6 +18,8 @@
     banner: {
       position: 'bottom',
       layout: 'bar',
+      cardPosition: 'right',
+      backdrop: false,
       logo: null,
       title: 'We value your privacy',
       description: 'We use cookies to enhance your experience.',
@@ -200,42 +202,100 @@
 
     // -- Global reset scoped to CMP containers --
     rules.push(
-      '#cmp-banner, #cmp-banner *, #cmp-prefs-overlay, #cmp-prefs-overlay * {' +
+      '#cmp-backdrop, #cmp-banner, #cmp-banner *, #cmp-prefs-overlay, #cmp-prefs-overlay * {' +
         'box-sizing: border-box;' +
         'line-height: normal;' +
       '}'
     );
 
+    var layout = config.banner.layout || 'bar';
+    var cardPos = config.banner.cardPosition || 'right';
+    var backdrop = config.banner.backdrop;
+
+    // ====== BACKDROP ======
+    if (backdrop) {
+      rules.push(
+        '#cmp-backdrop {' +
+          'all: initial;' +
+          'position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 999998;' +
+          'background: ' + t.overlayColor + ';' +
+          '-webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);' +
+          'animation: cmpFadeIn 0.2s ease-out;' +
+          'box-sizing: border-box;' +
+        '}'
+      );
+    }
+
     // ====== BANNER ======
-    rules.push(
-      '#cmp-banner {' +
-        'all: initial;' +
-        'position: fixed;' +
-        (pos === 'top' ? 'top: 0;' : 'bottom: 0;') +
-        'left: 0; right: 0; z-index: 999999;' +
-        'font-family: ' + t.fontFamily + ';' +
-        'color: ' + t.textColor + ';' +
-        'background: ' + t.backgroundColor + ';' +
-        'box-shadow: 0 ' + (pos === 'top' ? '4px' : '-4px') + ' 32px rgba(0,0,0,0.10);' +
-        'padding: 24px 28px;' +
-        'animation: cmpSlideIn 0.35s ease-out;' +
-        'box-sizing: border-box;' +
-        'line-height: normal;' +
-      '}'
-    );
-    rules.push(
-      '@keyframes cmpSlideIn {' +
-        'from { transform: translateY(' + (pos === 'top' ? '-100%' : '100%') + '); opacity:0; }' +
-        'to { transform: translateY(0); opacity:1; }' +
-      '}'
-    );
+    if (layout === 'card') {
+      // Card layout: floating card positioned left or right
+      var cardHoriz = cardPos === 'left' ? 'left: 20px;' : 'right: 20px;';
+      var cardVert = pos === 'top' ? 'top: 20px;' : 'bottom: 20px;';
+      var slideFrom = cardPos === 'left' ? '-120%' : '120%';
+
+      rules.push(
+        '#cmp-banner {' +
+          'all: initial;' +
+          'position: fixed;' +
+          cardVert + cardHoriz +
+          'z-index: 999999;' +
+          'width: 400px; max-width: calc(100vw - 40px);' +
+          'font-family: ' + t.fontFamily + ';' +
+          'color: ' + t.textColor + ';' +
+          'background: ' + t.backgroundColor + ';' +
+          'border-radius: ' + t.borderRadius + ';' +
+          'box-shadow: 0 8px 32px rgba(0,0,0,0.15);' +
+          'padding: 24px 28px;' +
+          'animation: cmpCardSlideIn 0.35s ease-out;' +
+          'box-sizing: border-box;' +
+          'line-height: normal;' +
+        '}'
+      );
+      rules.push(
+        '@keyframes cmpCardSlideIn {' +
+          'from { transform: translateX(' + slideFrom + '); opacity:0; }' +
+          'to { transform: translateX(0); opacity:1; }' +
+        '}'
+      );
+    } else {
+      // Bar layout: full-width top or bottom bar
+      rules.push(
+        '#cmp-banner {' +
+          'all: initial;' +
+          'position: fixed;' +
+          (pos === 'top' ? 'top: 0;' : 'bottom: 0;') +
+          'left: 0; right: 0; z-index: 999999;' +
+          'font-family: ' + t.fontFamily + ';' +
+          'color: ' + t.textColor + ';' +
+          'background: ' + t.backgroundColor + ';' +
+          'box-shadow: 0 ' + (pos === 'top' ? '4px' : '-4px') + ' 32px rgba(0,0,0,0.10);' +
+          'padding: 24px 28px;' +
+          'animation: cmpSlideIn 0.35s ease-out;' +
+          'box-sizing: border-box;' +
+          'line-height: normal;' +
+        '}'
+      );
+      rules.push(
+        '@keyframes cmpSlideIn {' +
+          'from { transform: translateY(' + (pos === 'top' ? '-100%' : '100%') + '); opacity:0; }' +
+          'to { transform: translateY(0); opacity:1; }' +
+        '}'
+      );
+    }
     rules.push('#cmp-banner * { box-sizing: border-box; margin: 0; padding: 0; }');
     rules.push('#cmp-banner-inner { max-width: 1200px; margin: 0 auto; }');
     rules.push('#cmp-banner-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }');
     rules.push('#cmp-banner-logo { height: 32px; width: auto; display: block; }');
     rules.push('#cmp-banner h2 { font-size: 17px; font-weight: 700; color: ' + t.textColor + '; font-family: ' + t.fontFamily + '; }');
     rules.push('#cmp-banner p { font-size: 14px; line-height: 1.55; color: ' + t.secondaryTextColor + '; margin-bottom: 18px; font-family: ' + t.fontFamily + '; }');
-    rules.push('#cmp-banner-buttons { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }');
+
+    // Card layout: stack buttons vertically
+    if (layout === 'card') {
+      rules.push('#cmp-banner-buttons { display: flex; flex-direction: column; gap: 8px; }');
+      rules.push('#cmp-banner-buttons button { width: 100%; }');
+    } else {
+      rules.push('#cmp-banner-buttons { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }');
+    }
     rules.push(
       '#cmp-banner-buttons button {' +
         'font-family: ' + t.fontFamily + '; font-size: 14px; font-weight: 600; padding: 10px 22px;' +
@@ -250,6 +310,15 @@
     rules.push('#cmp-btn-reject:hover { background: rgba(0,0,0,0.03); }');
     rules.push('#cmp-btn-settings { background: transparent; color: ' + t.primaryColor + '; text-decoration: underline; padding: 10px 12px; }');
     rules.push('#cmp-btn-settings:hover { color: ' + t.primaryHoverColor + '; }');
+
+    // Card responsive: full-width on narrow viewports
+    if (layout === 'card') {
+      rules.push(
+        '@media (max-width: 480px) {' +
+          '#cmp-banner { width: calc(100vw - 20px); left: 10px; right: 10px; }' +
+        '}'
+      );
+    }
 
     // ====== PREFERENCES OVERLAY ======
     rules.push(
@@ -535,6 +604,7 @@
     this.config = config;
     this.consentState = null;
     this.bannerEl = null;
+    this.backdropEl = null;
     this.prefsEl = null;
     this.reopenBtnEl = null;
     this._callbacks = [];
@@ -557,6 +627,11 @@
 
   ConsentManager.prototype._showBanner = function () {
     var self = this;
+    if (this.config.banner.backdrop) {
+      this.backdropEl = document.createElement('div');
+      this.backdropEl.id = 'cmp-backdrop';
+      document.body.appendChild(this.backdropEl);
+    }
     this.bannerEl = createBanner(
       this.config,
       function () { self._acceptAll(); },
@@ -567,6 +642,7 @@
   };
 
   ConsentManager.prototype._hideBanner = function () {
+    if (this.backdropEl) { this.backdropEl.remove(); this.backdropEl = null; }
     if (this.bannerEl) { this.bannerEl.remove(); this.bannerEl = null; }
   };
 
